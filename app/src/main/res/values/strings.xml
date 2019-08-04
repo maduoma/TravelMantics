@@ -3,9 +3,11 @@
     <string name="title_hint">Deal Title</string>
     <string name="price_hint">Price (numbers only)</string>
     <string name="description_hint">Description</string>
-    <string name="save_menu">save</string>
+    <string name="upload_menu">Upload</string>
     <string name="delete_deal">Delete Deal</string>
-    <string name="textview">TextView</string>
+    <string name="textView">TextView</string>
     <string name="image">Image</string>
-    <string name="upload_image">Upload Image</string>
+    <string name="select_image">Select Image</string>
+    <string name="new_travel_deal">New Travel Deal</string>
+    <string name="logout">Logout</string>
 </resources>

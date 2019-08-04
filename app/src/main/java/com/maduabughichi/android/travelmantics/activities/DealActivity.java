@@ -73,7 +73,7 @@ public class DealActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.save_menu:
+            case R.id.upload_menu:
                 saveDeal();
                 Toast.makeText(this, "Deal saved", Toast.LENGTH_LONG).show();
                 clean();
@@ -97,11 +97,11 @@ public class DealActivity extends AppCompatActivity {
         inflater.inflate(R.menu.save_menu, menu);
         if (FirebaseUtil.isAdmin) {
             menu.findItem(R.id.delete_menu).setVisible(true);
-            menu.findItem(R.id.save_menu).setVisible(true);
+            menu.findItem(R.id.upload_menu).setVisible(true);
             enableEditTexts(true);
         } else {
             menu.findItem(R.id.delete_menu).setVisible(false);
-            menu.findItem(R.id.save_menu).setVisible(false);
+            menu.findItem(R.id.upload_menu).setVisible(false);
             enableEditTexts(false);
         }
 
