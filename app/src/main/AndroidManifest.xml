@@ -11,8 +11,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activities.DealActivity"/>
-        <activity android:name=".activities.ListActivity">
+        <activity android:name=".activities.DealActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.ListActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
