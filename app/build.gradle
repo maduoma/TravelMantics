@@ -7,14 +7,32 @@ android {
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
-        versionName "1.0.0.0" 
-             
+        versionName "1.0.0.0"
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    def date = new Date().format('yyyyMMdd')
+                    def appName = new String("TRAVELMANTICS")
+                    outputFileName = "${variant.name.replace("release", "$appName")}-${"v" + variant.versionName + "-" + date}.apk"
+                }
+            }
+        }
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    def date = new Date().format('yyyyMMdd')
+                    def appName = new String("TRAVELMANTICS")
+                    outputFileName = "${variant.name.replace("release", "$appName")}-${"v" + variant.versionName + "-" + date}.apk"
+                }
+            }
         }
     }
 }
