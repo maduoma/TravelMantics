@@ -13,10 +13,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.StorageReference;
@@ -120,9 +118,13 @@ public class DealActivity extends AppCompatActivity {
                     Log.d("Url: ", url);
                     Log.d("Name", pictureName);
                     showImage(url);
+                } else {
+                    Toast.makeText(DealActivity.this, "FAILED!", Toast.LENGTH_SHORT).show();
                 }
-            });
-
+            }).addOnFailureListener(e ->
+                    Toast.makeText(DealActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show());
+        } else {
+            Toast.makeText(this, "No Image Selected", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -143,15 +145,6 @@ public class DealActivity extends AppCompatActivity {
             }
         }
 
-
-//        deal.setTitle(txtTitle.getText().toString());
-//        deal.setDescription(txtDescription.getText().toString());
-//        deal.setPrice(txtPrice.getText().toString());
-//        if (deal.getId() == null) {
-//            mDatabaseReference.push().setValue(deal);
-//        } else {
-//            mDatabaseReference.child(deal.getId()).setValue(deal);
-//        }
     }
 
     private void deleteDeal() {
@@ -164,12 +157,7 @@ public class DealActivity extends AppCompatActivity {
         //if (deal.getImageName() != null && deal.getImageName().isEmpty() == false)
         if (deal.getImageName() != null && !deal.getImageName().isEmpty()) {
             StorageReference picRef = FirebaseUtil.mStorage.getReference().child(deal.getImageName());
-            picRef.delete().addOnSuccessListener(aVoid -> Log.d("Delete Image", "Image Successfully Deleted")).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.d("Delete Image", e.getMessage());
-                }
-            });
+            picRef.delete().addOnSuccessListener(aVoid -> Log.d("Delete Image", "Image Successfully Deleted")).addOnFailureListener(e -> Log.d("Delete Image", e.getMessage()));
         }
 
     }

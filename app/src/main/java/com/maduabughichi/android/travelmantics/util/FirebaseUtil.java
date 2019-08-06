@@ -61,7 +61,6 @@ public class FirebaseUtil {
             connectStorage();
 
         }
-
         mDeals = new ArrayList<TravelDeal>();
         mDatabaseReference = mFirebaseDatabase.getReference().child(ref);
     }

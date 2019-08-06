@@ -120,14 +120,12 @@ public class DealAdapter extends RecyclerView.Adapter<DealAdapter.DealViewHolder
             intent.putExtra("Deal", selectedDeal);
             view.getContext().startActivity(intent);
         }
-
         private void showImage(String url) {
             //if (url != null && url.isEmpty() == false)
             if (url != null && !url.isEmpty()) {
                 //Picasso.with(imageDeal.getContext())
                 Picasso.get()
                         .load(url)
-                        .error(R.drawable.launcher_icon)
                         .resize(160, 160)
                         .centerCrop()
                         .into(imageDeal);

@@ -23,7 +23,6 @@ public class ListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list);
         //Offline Persistence
         FirebaseUtil.getDatabase();
-        showMenu();
     }
 
     @Override
@@ -51,7 +50,7 @@ public class ListActivity extends AppCompatActivity {
                 AuthUI.getInstance()
                         .signOut(this)
                         .addOnCompleteListener(task -> {
-                            Log.d("Logout", "User Logged Out");
+                            Log.d("Logout", "You Just Logged Out");
                             FirebaseUtil.attachListener();
                         });
                 FirebaseUtil.detachListener();
