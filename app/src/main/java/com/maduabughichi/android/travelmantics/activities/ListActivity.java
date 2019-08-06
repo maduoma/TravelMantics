@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -50,6 +51,7 @@ public class ListActivity extends AppCompatActivity {
                 AuthUI.getInstance()
                         .signOut(this)
                         .addOnCompleteListener(task -> {
+                            Toast.makeText(getApplicationContext(), "You Just Logged Out", Toast.LENGTH_LONG).show();
                             Log.d("Logout", "You Just Logged Out");
                             FirebaseUtil.attachListener();
                         });
