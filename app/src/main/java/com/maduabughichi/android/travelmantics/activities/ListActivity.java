@@ -7,24 +7,23 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.maduabughichi.android.travelmantics.R;
 import com.maduabughichi.android.travelmantics.adapter.DealAdapter;
 import com.maduabughichi.android.travelmantics.util.FirebaseUtil;
-import com.maduabughichi.android.travelmantics.R;
 
 public class ListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-
+        //Offline Persistence
+        FirebaseUtil.getDatabase();
+        showMenu();
     }
 
     @Override
@@ -38,8 +37,6 @@ public class ListActivity extends AppCompatActivity {
         } else {
             insertMenu.setVisible(false);
         }
-
-
         return true;
     }
 
@@ -53,11 +50,9 @@ public class ListActivity extends AppCompatActivity {
             case R.id.logout_menu:
                 AuthUI.getInstance()
                         .signOut(this)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            public void onComplete(@NonNull Task<Void> task) {
-                                Log.d("Logout", "User Logged Out");
-                                FirebaseUtil.attachListener();
-                            }
+                        .addOnCompleteListener(task -> {
+                            Log.d("Logout", "User Logged Out");
+                            FirebaseUtil.attachListener();
                         });
                 FirebaseUtil.detachListener();
                 return true;
@@ -69,6 +64,7 @@ public class ListActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         FirebaseUtil.detachListener();
+        showMenu();
     }
 
     @Override
@@ -81,6 +77,10 @@ public class ListActivity extends AppCompatActivity {
         LinearLayoutManager dealsLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         rvDeals.setLayoutManager(dealsLayoutManager);
         FirebaseUtil.attachListener();
+        if (FirebaseUtil.mFirebaseAuth.getUid() != null) {
+            FirebaseUtil.checkAdmin(FirebaseUtil.mFirebaseAuth.getUid());
+            showMenu();
+        }
     }
 
     public void showMenu() {

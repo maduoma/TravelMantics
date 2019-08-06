@@ -2,8 +2,6 @@ package com.maduabughichi.android.travelmantics.util;
 
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -13,8 +11,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.maduabughichi.android.travelmantics.model.TravelDeal;
+import com.maduabughichi.android.travelmantics.R;
 import com.maduabughichi.android.travelmantics.activities.ListActivity;
+import com.maduabughichi.android.travelmantics.model.TravelDeal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,7 +34,14 @@ public class FirebaseUtil {
 
     private FirebaseUtil() {
     }
-
+    //offline persistence
+    public static FirebaseDatabase getDatabase() {
+        if (mFirebaseDatabase == null) {
+            mFirebaseDatabase = FirebaseDatabase.getInstance();
+            mFirebaseDatabase.setPersistenceEnabled(true);
+        }
+        return mFirebaseDatabase;
+    }
     public static void openFbReference(String ref, final ListActivity callerActivity) {
         if (firebaseUtil == null) {
             firebaseUtil = new FirebaseUtil();
@@ -43,17 +49,14 @@ public class FirebaseUtil {
             mFirebaseAuth = FirebaseAuth.getInstance();
             caller = callerActivity;
 
-            mAuthListener = new FirebaseAuth.AuthStateListener() {
-                @Override
-                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                    if (firebaseAuth.getCurrentUser() == null) {
-                        FirebaseUtil.signIn();
-                    } else {
-                        String userId = firebaseAuth.getUid();
-                        checkAdmin(userId);
-                    }
-                    Toast.makeText(callerActivity.getBaseContext(), "Welcome back!", Toast.LENGTH_LONG).show();
+            mAuthListener = firebaseAuth -> {
+                if (firebaseAuth.getCurrentUser() == null) {
+                    FirebaseUtil.signIn();
+                } else {
+                    String userId = firebaseAuth.getUid();
+                    checkAdmin(userId);
                 }
+                Toast.makeText(callerActivity.getBaseContext(), "Welcome back!", Toast.LENGTH_LONG).show();
             };
             connectStorage();
 
@@ -75,11 +78,12 @@ public class FirebaseUtil {
                         .createSignInIntentBuilder()
                         .setAvailableProviders(providers)
                         .setIsSmartLockEnabled(false)
+                        .setLogo(R.drawable.launcher_icon)
                         .build(),
                 RC_SIGN_IN);
     }
 
-    private static void checkAdmin(String uid) {
+    public static void checkAdmin(String uid) {
         FirebaseUtil.isAdmin = false;
         DatabaseReference ref = mFirebaseDatabase.getReference().child("administrators").child(uid);
         ChildEventListener listener = new ChildEventListener() {

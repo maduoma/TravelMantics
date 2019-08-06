@@ -73,8 +73,7 @@ public class DealAdapter extends RecyclerView.Adapter<DealAdapter.DealViewHolder
     @Override
     public DealViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
-        View itemView = LayoutInflater.from(context)
-                .inflate(R.layout.rv_row, parent, false);
+        View itemView = LayoutInflater.from(context).inflate(R.layout.rv_row, parent, false);
         return new DealViewHolder(itemView);
 
     }
@@ -108,6 +107,7 @@ public class DealAdapter extends RecyclerView.Adapter<DealAdapter.DealViewHolder
             tvTitle.setText(deal.getTitle());
             tvDescription.setText(deal.getDescription());
             tvPrice.setText(deal.getPrice());
+            FirebaseUtil.connectStorage();////
             showImage(deal.getImageUrl());
         }
 
@@ -127,6 +127,7 @@ public class DealAdapter extends RecyclerView.Adapter<DealAdapter.DealViewHolder
                 //Picasso.with(imageDeal.getContext())
                 Picasso.get()
                         .load(url)
+                        .error(R.drawable.launcher_icon)
                         .resize(160, 160)
                         .centerCrop()
                         .into(imageDeal);
