@@ -7,37 +7,15 @@ android {
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
-        versionName "1.0.0.0"
-
+        versionName "1.0.0.0" +
+                "P=Y8TWS"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            android.applicationVariants.all { variant ->
-                variant.outputs.all {
-                    def date = new Date().format('yyyyMMdd')
-                    def appName = new String("TRAVELMANTICS")
-                    outputFileName = "${variant.name.replace("release", "$appName")}-${"v" + variant.versionName + "-" + date}.apk"
-                }
-            }
         }
-        debug {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            android.applicationVariants.all { variant ->
-                variant.outputs.all {
-                    def date = new Date().format('yyyyMMdd')
-                    def appName = new String("TRAVELMANTICS")
-                    outputFileName = "${variant.name.replace("release", "$appName")}-${"v" + variant.versionName + "-" + date}.apk"
-                }
-            }
-        }
-    }
-    compileOptions {
-        sourceCompatibility = '1.8'
-        targetCompatibility = '1.8'
     }
 }
 
@@ -53,6 +31,5 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-auth:3.1.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
-    implementation 'androidx.cardview:cardview:1.0.0'
 }
 apply plugin: 'com.google.gms.google-services'
