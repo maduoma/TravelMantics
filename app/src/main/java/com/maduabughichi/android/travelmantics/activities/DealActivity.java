@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,11 +26,11 @@ import com.squareup.picasso.Picasso;
 
 public class DealActivity extends AppCompatActivity {
     private static final int PICTURE_RESULT = 42;
-    EditText txtTitle;
-    EditText txtDescription;
-    EditText txtPrice;
-    ImageView imageView;
-    TravelDeal deal;
+    EditText mTxtTitle;
+    EditText mTxtDescription;
+    EditText mTxtPrice;
+    ImageView mImageView;
+    TravelDeal mDeal;
     FirebaseDatabase mFirebaseDatabase;
     DatabaseReference mDatabaseReference;
 
@@ -39,19 +40,16 @@ public class DealActivity extends AppCompatActivity {
         setContentView(R.layout.activity_deal);
         mFirebaseDatabase = FirebaseUtil.mFirebaseDatabase;
         mDatabaseReference = FirebaseUtil.mDatabaseReference;
-        txtTitle = findViewById(R.id.txtTitle);
-        txtDescription = findViewById(R.id.txtDescription);
-        txtPrice = findViewById(R.id.txtPrice);
-        imageView = findViewById(R.id.image);
+        initViews();
         Intent intent = getIntent();
         TravelDeal deal = (TravelDeal) intent.getSerializableExtra("Deal");
         if (deal == null) {
             deal = new TravelDeal();
         }
-        this.deal = deal;
-        txtTitle.setText(deal.getTitle());
-        txtDescription.setText(deal.getDescription());
-        txtPrice.setText(deal.getPrice());
+        this.mDeal = deal;
+        mTxtTitle.setText(deal.getTitle());
+        mTxtDescription.setText(deal.getDescription());
+        mTxtPrice.setText(deal.getPrice());
         showImage(deal.getImageUrl());
         Button btnImage = findViewById(R.id.btnImage);
         btnImage.setOnClickListener(view -> {
@@ -60,6 +58,13 @@ public class DealActivity extends AppCompatActivity {
             intent1.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
             startActivityForResult(Intent.createChooser(intent1, "Insert Picture"), PICTURE_RESULT);
         });
+    }
+
+    private void initViews() {
+        mTxtTitle = findViewById(R.id.txtTitle);
+        mTxtDescription = findViewById(R.id.txtDescription);
+        mTxtPrice = findViewById(R.id.txtPrice);
+        mImageView = findViewById(R.id.image);
     }
 
     @Override
@@ -113,8 +118,8 @@ public class DealActivity extends AppCompatActivity {
                 if (taskSnapshot.getDownloadUrl() != null) {
                     String url = taskSnapshot.getDownloadUrl().toString();
                     String pictureName = taskSnapshot.getStorage().getPath();
-                    deal.setImageUrl(url);
-                    deal.setImageName(pictureName);
+                    mDeal.setImageUrl(url);
+                    mDeal.setImageName(pictureName);
                     Log.d("Url: ", url);
                     Log.d("Name", pictureName);
                     showImage(url);
@@ -127,36 +132,40 @@ public class DealActivity extends AppCompatActivity {
             Toast.makeText(this, "No Image Selected", Toast.LENGTH_SHORT).show();
         }
     }
-
+//TextUtils.isEmpty()
     private void saveDeal() {
-        if (txtTitle.getText().toString().isEmpty() || txtPrice.getText().toString().isEmpty() || txtDescription.getText().toString().isEmpty()) {
+        initViews();
+        if (TextUtils.isEmpty(mTxtTitle.getText().toString())|| TextUtils.isEmpty(mTxtPrice.getText().toString()) || TextUtils.isEmpty((mTxtDescription.getText().toString()))){
+            mTxtTitle.setError("The field must not be empty!");
+            mTxtPrice.setError("The field must not be empty!");
+            mTxtDescription.setError("The field must not be empty!");
             Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show();
         } else {
-            deal.setTitle(txtTitle.getText().toString().trim());
-            deal.setDescription(txtDescription.getText().toString().trim());
-            deal.setPrice(txtPrice.getText().toString().trim());
-            if (deal.getId() == null) {
+            mDeal.setTitle(mTxtTitle.getText().toString().trim());
+            mDeal.setDescription(mTxtDescription.getText().toString().trim());
+            mDeal.setPrice(mTxtPrice.getText().toString().trim());
+            if (mDeal.getId() == null) {
                 // Creating a new entry
-                mDatabaseReference.push().setValue(deal).addOnSuccessListener(aVoid ->
+                mDatabaseReference.push().setValue(mDeal).addOnSuccessListener(aVoid ->
                         Toast.makeText(DealActivity.this, "Deal Saved!", Toast.LENGTH_SHORT).show());
             } else {
                 // Updating an existing entry
-                mDatabaseReference.child(deal.getId()).setValue(deal);
+                mDatabaseReference.child(mDeal.getId()).setValue(mDeal);
             }
         }
 
     }
 
     private void deleteDeal() {
-        if (deal == null) {
-            Toast.makeText(this, "Please save the deal before deleting", Toast.LENGTH_SHORT).show();
+        if (mDeal == null) {
+            Toast.makeText(this, "Please save the mDeal before deleting", Toast.LENGTH_SHORT).show();
             return;
         }
-        mDatabaseReference.child(deal.getId()).removeValue();
-        Log.d("image name", deal.getImageName());
-        //if (deal.getImageName() != null && deal.getImageName().isEmpty() == false)
-        if (deal.getImageName() != null && !deal.getImageName().isEmpty()) {
-            StorageReference picRef = FirebaseUtil.mStorage.getReference().child(deal.getImageName());
+        mDatabaseReference.child(mDeal.getId()).removeValue();
+        Log.d("image name", mDeal.getImageName());
+        //if (mDeal.getImageName() != null && mDeal.getImageName().isEmpty() == false)
+        if (mDeal.getImageName() != null && !mDeal.getImageName().isEmpty()) {
+            StorageReference picRef = FirebaseUtil.mStorage.getReference().child(mDeal.getImageName());
             picRef.delete().addOnSuccessListener(aVoid -> Log.d("Delete Image", "Image Successfully Deleted")).addOnFailureListener(e -> Log.d("Delete Image", e.getMessage()));
         }
 
@@ -169,16 +178,16 @@ public class DealActivity extends AppCompatActivity {
     }
 
     private void clean() {
-        txtTitle.setText("");
-        txtPrice.setText("");
-        txtDescription.setText("");
-        txtTitle.requestFocus();
+        mTxtTitle.setText("");
+        mTxtPrice.setText("");
+        mTxtDescription.setText("");
+        mTxtTitle.requestFocus();
     }
 
     private void enableEditTexts(boolean isEnabled) {
-        txtTitle.setEnabled(isEnabled);
-        txtDescription.setEnabled(isEnabled);
-        txtPrice.setEnabled(isEnabled);
+        mTxtTitle.setEnabled(isEnabled);
+        mTxtDescription.setEnabled(isEnabled);
+        mTxtPrice.setEnabled(isEnabled);
     }
 
     private void showImage(String url) {
@@ -191,7 +200,7 @@ public class DealActivity extends AppCompatActivity {
                     .error(R.drawable.launcher_icon)
                     .resize(width, width * 2 / 3)
                     .centerCrop()
-                    .into(imageView);
+                    .into(mImageView);
         }
     }
 }

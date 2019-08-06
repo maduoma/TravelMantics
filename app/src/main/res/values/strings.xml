@@ -10,4 +10,5 @@
     <string name="select_image">Select Image</string>
     <string name="new_travel_deal">New Travel Deal</string>
     <string name="logout">Logout</string>
+    <string name="naira_symbol">₦</string>
 </resources>
