@@ -14,6 +14,24 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    def date = new Date().format('yyyyMMdd')
+                    def appName = new String("TRAVELMANTICS")
+                    outputFileName = "${variant.name.replace("release", "$appName")}-${"v" + variant.versionName + "-" + date}.apk"
+                }
+            }
+        }
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    def date = new Date().format('yyyyMMdd')
+                    def appName = new String("TRAVELMANTICS")
+                    outputFileName = "${variant.name.replace("release", "$appName")}-${"v" + variant.versionName + "-" + date}.apk"
+                }
+            }
         }
     }
 
