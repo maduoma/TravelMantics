@@ -25,7 +25,6 @@ public class ListActivity extends AppCompatActivity {
         //Offline Persistence
         FirebaseUtil.getDatabase();
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
